@@ -1,4 +1,4 @@
-Creating and customizing volcano plot using MetaboAnalyst, Postgresql, and RStudio
+### Creating and customizing volcano plot using MetaboAnalyst, Postgresql, and RStudio
 
 ## Obtaining fold change, log2FoldChange, adjusted p value and log10p value Using MetaboAnalyst:
 
@@ -12,7 +12,7 @@ Creating and customizing volcano plot using MetaboAnalyst, Postgresql, and RStud
   ![img/Metaboanalyst3.png](https://github.com/Parlyy-101/Lipidomics/blob/main/img/Metaboanalyst3.png)
 - Set the parameters as shown in this image:
   ![img/Metaboanalyst_volcano.png](https://github.com/Parlyy-101/Lipidomics/blob/main/img/Metaboanalyst_volcano.png)
-- Open the table and then go to "Download" and download the "volcano.csv" file available. This file should contain the fold change, log2FoldChange, adjusted p value and log10p values needed to recreate the volcano plot in R.
+- Open the table and then go to "Download" and download the "volcano.csv" file available. This file should contain the fold change, log2FoldChange, adjusted p value and log10p values needed to recreate the volcano plot in R. (Please make sure that the log2fc and -log10p values are correct by conducting a brief verification.)
 - Make necessary changes to the headers to make the file more readable as shown [here](https://github.com/Parlyy-101/Lipidomics/blob/main/volcano.csv).
 
 
@@ -90,5 +90,34 @@ library(tibble)
 ```
 - Creating the plot:
 ```r
+volcano <- fread("volcano_labelled.csv")
+head(volcano)
 
+ggplot(data = volcano, aes(x = log2fc, y = log10p, col = colour, label = label)) +
+  geom_vline(xintercept = c(-0.6, 0.6), col = "gray", linetype = 'dashed') +
+  geom_hline(yintercept = -log10(0.05), col = "gray", linetype = 'dashed') +
+  geom_point(size = 2) + #to customize points
+  scale_color_manual(values = c("#00AFBB", "grey","#bb0c00"))+ # to set the labels
+  coord_cartesian(ylim = c(0, 15), xlim = c(-5,5)) + # to change scale of the axes
+  labs(color = 'Key', #legend_title,
+       x = expression("log"[2]*"FC"), y = expression("-log"[10]*"Adjusted p-value")) + # axis labels
+  scale_x_continuous(breaks = seq(-5,5, 5)) + # to customise the breaks in the x axis
+  ggtitle('Psoriasis vs Control') + # Plot title
+  geom_text_repel(max.overlaps = Inf, size=3) +   theme_bw()
+# the lines below can be used instead of theme_bw() to customize the figure further
+# theme(panel.background = element_rect(fill = 'white', color = 'white'),
+# panel.grid.major = element_line(color = 'white', linetype = 'solid'), 
+# axis.line.x = element_line(size = 0.5),
+# axis.line.y = element_line(size = 0.5),
+# axis.text.x = element_text(face="bold"),
+# axis.text.y = element_text(face="bold"),
+# axis.text=element_text(color="black"),
+# axis.ticks=element_line(size=1),
+# axis.ticks.length=unit(.25, "cm"),
+# text= element_text(size=20),                                             
+# panel.border = element_rect(colour = "black", fill=NA, size=1))
 ```
+Image should look something like this: 
+![VolcanoPlot/volcano_plot.png](https://github.com/Parlyy-101/Lipidomics/blob/main/VolcanoPlot/volcano_plot.png)
+
+- You can now customise it according to your needs.
