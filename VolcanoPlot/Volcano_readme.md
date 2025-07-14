@@ -70,3 +70,25 @@ FROM volcano_plot) To 'D:\Work\GitHub\volcano_labelled.csv' With CSV DELIMITER '
 ```
 - The file should look like [this](https://github.com/Parlyy-101/Lipidomics/blob/main/volcano_labelled.csv)
 - Your file is now ready for RStudio!
+
+## Creating volcano plot in RStudio using ggplot
+
+- You will need to install the following packages in R:
+```r
+install.packages("tidyverse") 
+install.packages("RColorBrewer") 
+install.packages("ggrepel")
+install.packages("tibble")
+```
+- Call the libraries as follows:
+```r
+library(tidyverse) # includes ggplot2, for data visualisation. dplyr, for data manipulation.
+library(RColorBrewer) # for a colourful plot
+library(ggrepel) # for annotations
+library(data.table) # to read .csv files
+library(tibble)
+```
+- Creating the plot:
+```r
+
+```
