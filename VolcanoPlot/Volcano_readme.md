@@ -20,12 +20,53 @@ Creating and customizing volcano plot using MetaboAnalyst, Postgresql, and RStud
 
 
 - To create a table use the following commands:
-  '````sql 
+```sql 
 CREATE TABLE volcano_plot 
 (name text,
 fc numeric,
 log2fc numeric,
 padj numeric,
 log10p numeric);
-  '````
-
+```
+- To import your data from the file named "volcano.csv", use these commands:
+```sql
+COPY volcano_plot(name, fc, log2fc, padj, log10p)
+FROM 'path\name.csv'
+DELIMITER ','
+CSV HEADER;
+```
+ In my case, the code looks like this:
+```sql
+COPY volcano_plot(name, fc, log2fc, padj, log10p)
+FROM 'D:\Work\GitHub\volcano.csv'
+DELIMITER ','
+CSV HEADER;
+```
+- We can add an additional column to this file that will define whether the lipid species is upregulated or downregulated. Additionally, we should also add a column that will be used in R to label the points in the volcano plot which are significantly deregulated.
+```sql
+SELECT *,
+CASE WHEN log2fc >0.6 AND padj <0.05 THEN 'Upregulated'
+     WHEN log2fc <-0.6 AND padj <0.05 THEN 'Downregulated'
+	 ELSE 'Not_significant'
+END as colour,
+CASE WHEN log2fc >0.6 AND padj <0.05 THEN name
+     WHEN log2fc <-0.6 AND padj <0.05 THEN name
+	 ELSE null
+END as label
+FROM volcano_plot;
+```
+To download the output of this code, use the COPY command as follows:
+```sql
+Copy (SELECT *,
+CASE WHEN log2fc >0.6 AND padj <0.05 THEN 'Upregulated'
+     WHEN log2fc <-0.6 AND padj <0.05 THEN 'Downregulated'
+	 ELSE 'Not_significant'
+END as colour,
+CASE WHEN log2fc >0.6 AND padj <0.05 THEN name
+     WHEN log2fc <-0.6 AND padj <0.05 THEN name
+	 ELSE null
+END as label
+FROM volcano_plot) To 'D:\Work\GitHub\volcano_labelled.csv' With CSV DELIMITER ',' HEADER;
+```
+- The file should look like [this](https://github.com/Parlyy-101/Lipidomics/blob/main/volcano_labelled.csv)
+- Your file is now ready for RStudio!
