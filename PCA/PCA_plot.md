@@ -38,3 +38,26 @@ scale_colour_manual(values= c("#b51963","#5ba300"))+ #to colour the data points
   scale_y_continuous(breaks = seq(-.4,.4, .1)) + #to set breaks in y axis
   theme_bw()
 ```
+ The plot should look like this:
+ ![PCA/pca_plot.png](https://github.com/Parlyy-101/Lipidomics/blob/main/PCA/pca_plot.png)
+ 
+- You can also add additional changes to the theme using the functions mentioned below:
+```r
+ pca_res <- prcomp(input, scale. = TRUE)
+ autoplot(pca_res, data = groups,  colour = 'Groups', frame = TRUE, frame.type = 'norm', size=3)+ #frame is used to create the ellipses
+  scale_colour_manual(values= c("#b51963","#5ba300"))+ #to colour the data points
+  coord_cartesian(ylim = c(-.4, .4), xlim = c(-.4, .4)) + #to set the scales
+  scale_x_continuous(breaks = seq(-.4,.4, .1))+  #to set breaks in x axis
+  scale_y_continuous(breaks = seq(-.4,.4, .1)) + 
+  theme(panel.background = element_rect(fill = 'white', color = 'white'), 
+      panel.grid.major = element_line(color = '#b7bec9', linetype = 'solid'), 
+      text=element_text(size=20), 
+      axis.line.x = element_line(size = 0.7),
+      axis.line.y = element_line(size = 0.7),
+      axis.text.x = element_text(),
+      axis.text.y = element_text(),
+      axis.text=element_text(color="black"),
+      axis.ticks=element_line(size=1),
+      axis.ticks.length=unit(.25, "cm"),
+      panel.border = element_rect(colour = "black", fill=NA, size=0.8))
+```
